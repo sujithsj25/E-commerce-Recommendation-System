@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-in {
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    .hero-glow {
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 400px;
+        height: 400px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 50%;
+        filter: blur(80px);
+    }
+</style>
+
+<!-- Animated Hero Section -->
+<div class="animate-in"
+    style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border-radius: 20px; padding: 60px; display: flex; align-items: center; justify-content: space-between; position: relative; border: 1px solid #e2e8f0; overflow: hidden;">
+    <div class="hero-glow"></div>
+    <div style="color: var(--text-main); max-width: 55%; z-index: 2;">
+        <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; line-height: 1.1;">Experience the<br>New
+            Standard.</h1>
+        <p style="font-size: 1.15rem; color: #475569; margin-bottom: 30px;">Premium goods for premium tastes. AI-driven
+            recommendations at your fingertips.</p>
+        <a href="{% url 'home' %}"
+            style="background: var(--primary); color: white; padding: 14px 28px; font-weight: 600; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 10px rgba(59,130,246,0.3); display: inline-block;">Explore
+            Store</a>
+    </div>
+    <i class="fa-solid fa-bolt" style="font-size: 200px; color: rgba(59,130,246,0.05); transform: rotate(15deg);"></i>
+</div>
+
+<!-- AI RECOMMENDATIONS -->
+{% if request.user.is_authenticated %}
+<div class="section-header" style="margin-top: 60px;">
+    <h2><i class="fa-solid fa-sparkles" style="color: var(--primary);"></i> Recommended for You</h2>
+</div>
+<div class="product-grid">
+    {% for product in recommended|slice:":4" %}
+    <div class="product-card">
+        <div class="product-image"><img
+                src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
+                alt="{{ product.name }}"></div>
+        <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
+        <div class="product-title">{{ product.name }}</div>
+        <div class="product-footer">
+            <div class="product-price">₹{{ product.price|floatformat:0 }}</div><a
+                href="{% url 'add_to_cart' product.id %}" class="btn-action"><i class="fa-solid fa-plus"></i></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- TOP SELLING (Dynamic) -->
+<div class="section-header" style="margin-top: 60px;">
+    <h2><i class="fa-solid fa-fire" style="color: #ef4444;"></i> Top Sellers</h2>
+</div>
+<div class="product-grid">
+    {% for product in top_sellers %}
+    <div class="product-card">
+        <div class="product-image"><img
+                src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
+                alt="{{ product.name }}"></div>
+        <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
+        <div class="product-title">{{ product.name }}</div>
+        <div class="product-footer">
+            <div class="product-price">₹{{ product.price|floatformat:0 }}</div><a
+                href="{% url 'add_to_cart' product.id %}" class="btn-action">+</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

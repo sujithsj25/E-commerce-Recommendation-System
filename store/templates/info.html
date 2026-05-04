@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="animate-in"
+    style="max-width: 800px; margin: 40px auto; background: var(--surface); padding: 60px; border-radius: 24px; box-shadow: var(--shadow-lg); border: 1px solid var(--border);">
+    <div style="margin-bottom: 40px;">
+        <span
+            style="background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Sj_Store
+            Corporate</span>
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-top: 15px; color: var(--text-main);">{{ title }}</h1>
+    </div>
+
+    <div style="font-size: 1.1rem; line-height: 1.8; color: #475569;">
+        {{ content|safe }}
+    </div>
+
+    <div
+        style="margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
+        <a href="{% url 'home' %}"
+            style="color: var(--primary); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-arrow-left"></i> Back to Store
+        </a>
+        <p style="font-size: 13px; color: var(--text-muted);">Last updated: {% now "F Y" %}</p>
+    </div>
+</div>
+{% endblock %}

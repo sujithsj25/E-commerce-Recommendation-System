@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SJ_Store - Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Premium Navbar */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        /* Toast Styling */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--text-main);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .navbar .brand {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar .brand i {
+            color: var(--primary);
+        }
+
+        .search-container {
+            flex-grow: 1;
+            max-width: 500px;
+            position: relative;
+            margin: 0 40px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 45px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .search-container input:focus {
+            background: var(--surface);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .navItems {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .navItems a,
+        .navItems button {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .navItems a:hover,
+        .navItems button:hover {
+            color: var(--primary);
+        }
+
+        .cart-btn {
+            position: relative;
+        }
+
+        .cart-btn .badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: var(--primary);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        /* Categories Bar */
+        .categories {
+            background: var(--surface);
+            padding: 12px 40px;
+            display: flex;
+            gap: 30px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            justify-content: center;
+        }
+
+        .categories a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .categories a:hover {
+            color: var(--text-main);
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        /* Premium Product Cards */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #f1f5f9;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-image {
+            height: 200px;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-brand {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .product-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-footer {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .btn-action {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            color: var(--text-main);
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 60px 40px;
+            margin-top: 80px;
+            color: var(--text-muted);
+        }
+
+        .footer-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        footer h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 12px;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--primary);
+        }
+    </style>
+    <script>
+        function showToast(message, icon = 'fa-check-circle') {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</head>
+
+<body>
+    <div id="toast"></div>
+    <div class="navbar">
+        <a href="{% url 'landing' %}" class="brand">
+            <img src="/static/images/logo.png" alt="Sj_Store Logo"
+                style="height: 40px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.4)); margin-right: 8px;">
+            Sj_Store
+        </a>
+
+        <form action="{% url 'search' %}" method="get" class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="q" placeholder="Search premium items..." value="{{ search_query|default:'' }}">
+        </form>
+
+        <div class="navItems">
+            <a href="{% url 'home' %}">Store</a>
+            {% if request.user.is_authenticated %}
+            <span style="color: var(--text-muted); cursor: default;">{{ request.user.username }}</span>
+            <form action="{% url 'logout' %}" method="post" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </form>
+            <a href="{% url 'view_cart' %}" class="cart-btn">
+                <i class="fa-solid fa-cart-shopping" style="font-size: 18px;"></i>
+                <!-- Dynamic cart badge would go here -->
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}">Sign in</a>
+            <a href="{% url 'register' %}"
+                style="background: var(--text-main); color: white; padding: 10px 20px; border-radius: 8px;">Create
+                account</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="categories">
+        <a href="{% url 'category' 'Mobiles' %}">Mobile Phones</a>
+        <a href="{% url 'category' 'Laptops' %}">Laptops & PCs</a>
+        <a href="{% url 'category' 'Accessories' %}">Audio & Accessories</a>
+        <a href="{% url 'category' 'Electronics' %}">Home Electronics</a>
+        <a href="{% url 'category' 'Fashion' %}">Apparel</a>
+        <a href="{% url 'category' 'Home & Appliances' %}">Appliances</a>
+    </div>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <a href="{% url 'landing' %}" class="brand"
+                    style="font-size: 20px; font-weight: 800; color: var(--text-main); text-decoration: none; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <img src="/static/images/logo.png" alt="Logo"
+                        style="height: 32px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(59, 130, 246, 0.3));">
+                    Sj_Store
+                </a>
+                <p style="font-size: 14px; line-height: 1.6; max-width: 300px;">Experience a seamlessly crafted
+                    e-commerce platform curated uniquely for your taste and built with premium modern architecture.</p>
+            </div>
+            <div>
+                <h3>Company</h3>
+                <a href="{% url 'info' 'about' %}">About Us</a>
+                <a href="{% url 'info' 'careers' %}">Careers</a>
+                <a href="{% url 'info' 'news' %}">Newsroom</a>
+            </div>
+            <div>
+                <h3>Support</h3>
+                <a href="{% url 'info' 'contact' %}">Contact Center</a>
+                <a href="{% url 'info' 'returns' %}">Returns</a>
+                <a href="{% url 'info' 'warranty' %}">Warranty Info</a>
+            </div>
+            <div>
+                <h3>Legal</h3>
+                <a href="{% url 'info' 'privacy' %}">Privacy Policy</a>
+                <a href="{% url 'info' 'terms' %}">Terms of Service</a>
+            </div>
+        </div>
+        <div
+            style="border-top: 1px solid var(--border); margin-top: 60px; padding-top: 30px; text-align: center; font-size: 13px;">
+            &copy; {% now "Y" %} Sj_Store Inc. All rights reserved.
+        </div>
+    </footer>
+</body>
+
+</html>

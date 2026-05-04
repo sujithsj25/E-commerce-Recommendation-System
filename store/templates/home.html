@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if not category_name and not recommended and not search_query %}
+<div class="animate-in"
+  style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 20px; padding: 60px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; margin-bottom: 40px;">
+  <div style="color: white; max-width: 50%; z-index: 2;">
+    <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 20px;">Live Catalog.</h1>
+    <p style="font-size: 1.1rem; color: #94a3b8;">Real-time sync with our premium collection.</p>
+  </div>
+  <i class="fa-solid fa-sync"
+    style="font-size: 200px; color: rgba(255,255,255,0.05); position: absolute; right: 40px; animation: spin 20s linear infinite;"></i>
+</div>
+<style>
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+{% endif %}
+
+<!-- SEARCH RESULTS -->
+{% if search_query %}
+<div class="section-header">
+  <h2><i class="fa-solid fa-magnifying-glass"></i> Search Results for "{{ search_query }}"</h2>
+</div>
+{% if products %}
+<div class="product-grid">
+  {% for product in products %}
+  <div class="product-card">
+    <div class="product-image"><img
+        src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
+        alt="{{ product.name }}"></div>
+    <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
+    <div class="product-title">{{ product.name }}</div>
+    <div class="product-footer">
+      <div class="product-price">₹{{ product.price|floatformat:0 }}</div>
+      <div style="display:flex;gap:8px;">
+        <a href="{% url 'interact' product.id %}" class="btn-action"><i class="fa-solid fa-heart"></i></a>
+        <a href="{% url 'add_to_cart' product.id %}" class="btn-action"
+          style="background:var(--text-main);color:white;"><i class="fa-solid fa-cart-plus"></i></a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p style="text-align:center; padding: 40px; color: var(--text-muted);">No products found matching your search.</p>
+{% endif %}
+<hr style="border: 0; border-top: 1px solid var(--border); margin: 40px 0;">
+{% endif %}
+
+{% if not search_query %}
+<div class="section-header">
+  <h2><i class="fa-solid fa-layer-group"></i> {% if category_name %}{{ category_name }}{% else %}All Products{% endif %}
+  </h2>
+</div>
+
+<!-- Category-wise Loops -->
+{% for cat in categories %}
+{% if category_name == cat or not category_name %}
+<div class="section-header" style="margin-top: 40px;">
+  <h3><i class="fa-solid fa-tag"></i> {{ cat }}</h3>
+</div>
+<div class="product-grid">
+  {% for product in products %}
+  {% if product.category == cat %}
+  <div class="product-card">
+    <div class="product-image">
+      <img src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
+        alt="{{ product.name }}">
+    </div>
+    <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
+    <div class="product-title">{{ product.name }}</div>
+    <div class="product-footer">
+      <div class="product-price">₹{{ product.price|floatformat:0 }}</div>
+      <div style="display:flex;gap:8px;">
+        <a href="{% url 'interact' product.id %}" class="btn-action"><i class="fa-solid fa-heart"></i></a>
+        <a href="{% url 'add_to_cart' product.id %}" class="btn-action"
+          style="background:var(--text-main);color:white;"><i class="fa-solid fa-cart-plus"></i></a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% endblock %}
