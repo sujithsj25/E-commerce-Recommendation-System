@@ -85,6 +85,28 @@
             color: var(--primary);
         }
 
+        .navbar .brand img {
+            height: 40px;
+            object-fit: contain;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: logo-glow 3s ease-in-out infinite alternate;
+        }
+
+        .navbar .brand:hover img {
+            transform: scale(1.1) rotate(5deg);
+            filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.6));
+        }
+
+        @keyframes logo-glow {
+            from {
+                filter: drop-shadow(0 2px 5px rgba(59, 130, 246, 0.3));
+            }
+
+            to {
+                filter: drop-shadow(0 4px 15px rgba(59, 130, 246, 0.6));
+            }
+        }
+
         .search-container {
             flex-grow: 1;
             max-width: 500px;
@@ -357,8 +379,7 @@
     <div id="toast"></div>
     <div class="navbar">
         <a href="{% url 'landing' %}" class="brand">
-            <img src="/static/images/logo.png" alt="Sj_Store Logo"
-                style="height: 40px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.4)); margin-right: 8px;">
+            <img src="/static/images/logo.png" alt="Sj_Store Logo">
             Sj_Store
         </a>
 
@@ -407,8 +428,7 @@
             <div>
                 <a href="{% url 'landing' %}" class="brand"
                     style="font-size: 20px; font-weight: 800; color: var(--text-main); text-decoration: none; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                    <img src="/static/images/logo.png" alt="Logo"
-                        style="height: 32px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(59, 130, 246, 0.3));">
+                    <img src="/static/images/logo.png" alt="Logo">
                     Sj_Store
                 </a>
                 <p style="font-size: 14px; line-height: 1.6; max-width: 300px;">Experience a seamlessly crafted
