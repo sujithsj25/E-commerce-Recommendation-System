@@ -33,11 +33,13 @@
 <div class="product-grid">
   {% for product in products %}
   <div class="product-card">
-    <div class="product-image"><img
-        src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
-        alt="{{ product.name }}"></div>
-    <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
-    <div class="product-title">{{ product.name }}</div>
+    <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+      <div class="product-image"><img
+          src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
+          alt="{{ product.name }}"></div>
+      <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
+      <div class="product-title">{{ product.name }}</div>
+    </a>
     <div class="product-footer">
       <div class="product-price">₹{{ product.price|floatformat:0 }}</div>
       <div style="display:flex;gap:8px;">
@@ -64,19 +66,23 @@
 <!-- Category-wise Loops -->
 {% for cat in categories %}
 {% if category_name == cat or not category_name %}
+{% if not category_name %}
 <div class="section-header" style="margin-top: 40px;">
   <h3><i class="fa-solid fa-tag"></i> {{ cat }}</h3>
 </div>
+{% endif %}
 <div class="product-grid">
   {% for product in products %}
   {% if product.category == cat %}
   <div class="product-card">
-    <div class="product-image">
-      <img src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
-        alt="{{ product.name }}">
-    </div>
-    <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
-    <div class="product-title">{{ product.name }}</div>
+    <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+      <div class="product-image">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
+          alt="{{ product.name }}">
+      </div>
+      <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
+      <div class="product-title">{{ product.name }}</div>
+    </a>
     <div class="product-footer">
       <div class="product-price">₹{{ product.price|floatformat:0 }}</div>
       <div style="display:flex;gap:8px;">

@@ -8,6 +8,10 @@ from .recommender import get_recommendations
 CATEGORIES = ['Mobiles', 'Laptops', 'Accessories', 'Electronics', 'Fashion', 'Home & Appliances']
 
 def landing(request):
+    """
+    Renders the premium landing page featuring hero sections, 
+    AI-driven recommendations, and top-selling items.
+    """
     top_products = Product.objects.order_by('?')[:8]
     recommended = []
     
@@ -25,6 +29,10 @@ def landing(request):
     })
 
 def home(request):
+    """
+    The main store dashboard. Fetches all products and categorizes them 
+    for the dynamic grid layout.
+    """
     products = Product.objects.all()
     recommended = []
 
@@ -54,6 +62,10 @@ def category_view(request, category_name):
     })
 
 def search_view(request):
+    """
+    Handles real-time search queries using Django Q-objects to filter 
+    products by name or category.
+    """
     query = request.GET.get('q')
     products = Product.objects.none()
     if query:
@@ -113,6 +125,9 @@ def interact_product(request, product_id):
 
 @login_required
 def view_cart(request):
+    """
+    Displays the shopping cart with a total price calculation.
+    """
     from .models import Cart, CartItem
     cart, created = Cart.objects.get_or_create(user=request.user)
     total = sum(item.product.price * item.quantity for item in cart.items.all())
@@ -130,6 +145,21 @@ def add_to_cart(request, product_id):
         cart_item.save()
         
     return redirect('view_cart')
+
+def product_detail(request, pk):
+    """
+    Renders a dedicated detail page for a specific product.
+    Includes related products from the same category.
+    """
+    from django.shortcuts import get_object_or_404
+    product = get_object_or_404(Product, pk=pk)
+    related_products = Product.objects.filter(category=product.category).exclude(pk=pk)[:4]
+    
+    return render(request, 'product_detail.html', {
+        'product': product,
+        'related_products': related_products
+    })
+
 def info_view(request, page_slug):
     pages = {
         'about': {
@@ -171,6 +201,10 @@ def info_view(request, page_slug):
 
 @login_required
 def remove_from_cart(request, item_id):
+    """
+    Safety-first cart removal logic. Decrements quantity by one until 
+    the item is fully removed, ensuring a defensive user experience.
+    """
     from .models import CartItem
     from django.shortcuts import get_object_or_404
     

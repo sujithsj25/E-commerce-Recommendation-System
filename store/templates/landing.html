@@ -27,23 +27,98 @@
         border-radius: 50%;
         filter: blur(80px);
     }
+
+    @keyframes scroll-x {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    .icon-marquee {
+        display: none; /* Removed marquee */
+    }
+
+    /* Premium Banner Slider */
+    .hero-slider {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+
+    .slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 100px;
+    }
+
+    .slide.active {
+        opacity: 1;
+    }
+
+    .slide-image {
+        height: 350px;
+        filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
+        transform: scale(0.8);
+        transition: transform 2s ease-out;
+    }
+
+    .slide.active .slide-image {
+        transform: scale(1);
+    }
 </style>
 
-<!-- Animated Hero Section -->
+<!-- Animated Hero Section with Banner Slider -->
 <div class="animate-in"
-    style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border-radius: 20px; padding: 60px; display: flex; align-items: center; justify-content: space-between; position: relative; border: 1px solid #e2e8f0; overflow: hidden;">
-    <div class="hero-glow"></div>
-    <div style="color: var(--text-main); max-width: 55%; z-index: 2;">
-        <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; line-height: 1.1;">Experience the<br>New
-            Standard.</h1>
-        <p style="font-size: 1.15rem; color: #475569; margin-bottom: 30px;">Premium goods for premium tastes. AI-driven
-            recommendations at your fingertips.</p>
-        <a href="{% url 'home' %}"
-            style="background: var(--primary); color: white; padding: 14px 28px; font-weight: 600; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 10px rgba(59,130,246,0.3); display: inline-block;">Explore
-            Store</a>
+    style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 24px; padding: 80px 60px; display: flex; align-items: center; position: relative; border: 1px solid var(--border); overflow: hidden; height: 450px;">
+    
+    <div class="hero-slider" id="heroSlider">
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <i class="fa-solid fa-laptop slide-image" style="color: rgba(59, 130, 246, 0.1); font-size: 300px;"></i>
+        </div>
+        <!-- Slide 2 -->
+        <div class="slide">
+            <i class="fa-solid fa-mobile-screen-button slide-image" style="color: rgba(16, 185, 129, 0.1); font-size: 300px;"></i>
+        </div>
+        <!-- Slide 3 -->
+        <div class="slide">
+            <i class="fa-solid fa-headphones slide-image" style="color: rgba(239, 68, 68, 0.1); font-size: 300px;"></i>
+        </div>
     </div>
-    <i class="fa-solid fa-bolt" style="font-size: 200px; color: rgba(59,130,246,0.05); transform: rotate(15deg);"></i>
+
+    <div class="hero-glow"></div>
+    
+    <div style="color: var(--text-main); max-width: 500px; z-index: 10; position: relative;">
+        <div style="background: var(--primary); color: white; display: inline-block; padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px;">
+            New Arrivals 2024
+        </div>
+        <h1 style="font-size: 4rem; font-weight: 800; margin-bottom: 25px; line-height: 1; letter-spacing: -2px;">Experience the<br>New Standard.</h1>
+        <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; font-weight: 500;">Premium goods for premium tastes. AI-driven recommendations at your fingertips.</p>
+        <a href="{% url 'home' %}"
+            style="background: var(--text-main); color: white; padding: 18px 36px; font-weight: 700; border-radius: 14px; text-decoration: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: inline-block; transition: transform 0.2s;">
+            Explore Shop <i class="fa-solid fa-arrow-right" style="margin-left: 10px; font-size: 14px;"></i>
+        </a>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        setInterval(nextSlide, 4000); // Change slide every 4 seconds
+    });
+</script>
 
 <!-- AI RECOMMENDATIONS -->
 {% if request.user.is_authenticated %}
@@ -53,11 +128,13 @@
 <div class="product-grid">
     {% for product in recommended|slice:":4" %}
     <div class="product-card">
-        <div class="product-image"><img
-                src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
-                alt="{{ product.name }}"></div>
-        <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
-        <div class="product-title">{{ product.name }}</div>
+        <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+            <div class="product-image"><img
+                    src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
+                    alt="{{ product.name }}"></div>
+            <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
+            <div class="product-title">{{ product.name }}</div>
+        </a>
         <div class="product-footer">
             <div class="product-price">₹{{ product.price|floatformat:0 }}</div><a
                 href="{% url 'add_to_cart' product.id %}" class="btn-action"><i class="fa-solid fa-plus"></i></a>
@@ -74,11 +151,13 @@
 <div class="product-grid">
     {% for product in top_sellers %}
     <div class="product-card">
-        <div class="product-image"><img
-                src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
-                alt="{{ product.name }}"></div>
-        <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
-        <div class="product-title">{{ product.name }}</div>
+        <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+            <div class="product-image"><img
+                    src="{% if product.image %}{{ product.image.url }}{% else %}{{ product.image_url }}{% endif %}"
+                    alt="{{ product.name }}"></div>
+            <div class="product-brand">{{ product.brand|default:"Premium" }}</div>
+            <div class="product-title">{{ product.name }}</div>
+        </a>
         <div class="product-footer">
             <div class="product-price">₹{{ product.price|floatformat:0 }}</div><a
                 href="{% url 'add_to_cart' product.id %}" class="btn-action">+</a>

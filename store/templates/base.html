@@ -7,8 +7,10 @@
     <title>SJ_Store - Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <style>
         :root {
+            /* Premium Design Tokens */
             --bg: #f8fafc;
             --surface: #ffffff;
             --text-main: #0f172a;
@@ -16,6 +18,7 @@
             --primary: #3b82f6;
             --primary-hover: #2563eb;
             --border: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.7);
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
@@ -29,9 +32,54 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Premium Navbar */
+        /* Top Loading Progress Bar */
+        #loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), #60a5fa);
+            z-index: 1000;
+            width: 0%;
+            transition: width 0.4s ease-out;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Premium Content Transitions */
+        main {
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Shimmer Effect for Skeleton States */
+        @keyframes shimmer {
+            0% { background-position: -468px 0 }
+            100% { background-position: 468px 0 }
+        }
+
+        .skeleton {
+            background: #f6f7f8;
+            background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+            background-repeat: no-repeat;
+            background-size: 800px 104px;
+            display: inline-block;
+            position: relative;
+            animation: shimmer 1s linear infinite forwards;
+        }
+
+        /* Premium Glassmorphism Navbar */
         .navbar {
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-bottom: 1px solid rgba(226, 232, 240, 0.8);
@@ -88,15 +136,15 @@
         .navbar .brand img {
             height: 40px;
             object-fit: contain;
+            border-radius: 12px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: logo-glow 3s ease-in-out infinite alternate;
         }
 
-        .navbar .brand:hover img {
-            transform: scale(1.1) rotate(5deg);
-            filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.6));
-        }
+        
+    
 
+        /* Logo Breathing Animation */
         @keyframes logo-glow {
             from {
                 filter: drop-shadow(0 2px 5px rgba(59, 130, 246, 0.3));
@@ -184,26 +232,48 @@
             border-radius: 10px;
         }
 
-        /* Categories Bar */
+        /* Categories Bar Modern Chips */
         .categories {
-            background: var(--surface);
-            padding: 12px 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 15px 40px;
             display: flex;
-            gap: 30px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            gap: 15px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             justify-content: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border);
         }
 
         .categories a {
-            color: var(--text-muted);
+            color: var(--text-main);
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            transition: color 0.2s;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            background: var(--surface);
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .categories a i {
+            color: var(--primary);
+            font-size: 14px;
         }
 
         .categories a:hover {
-            color: var(--text-main);
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .categories a:hover i {
+            color: white;
         }
 
         /* Main Container */
@@ -247,13 +317,14 @@
             border-radius: 12px;
             overflow: hidden;
             position: relative;
+            padding: 15px;
         }
 
         .product-image img {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: 90%;
+            max-height: 90%;
             object-fit: contain;
-            transition: transform 0.3s;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .product-card:hover .product-image img {
@@ -364,8 +435,36 @@
         footer a:hover {
             color: var(--primary);
         }
+
+        footer .brand img {
+            height: 32px;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+
+        footer .brand:hover img {
+            transform: scale(1.05);
+        }
     </style>
     <script>
+        // HTMX Loading Bar Integration
+        document.body.addEventListener('htmx:beforeRequest', function() {
+            const bar = document.getElementById('loading-bar');
+            bar.style.width = '30%';
+        });
+
+        document.body.addEventListener('htmx:afterRequest', function() {
+            const bar = document.getElementById('loading-bar');
+            bar.style.width = '100%';
+            setTimeout(() => { bar.style.width = '0%'; }, 500);
+        });
+
+        document.body.addEventListener('htmx:afterOnLoad', function() {
+            // Re-trigger animations if needed
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
         function showToast(message, icon = 'fa-check-circle') {
             const toast = document.getElementById('toast');
             toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
@@ -376,9 +475,10 @@
 </head>
 
 <body>
+    <div id="loading-bar"></div>
     <div id="toast"></div>
     <div class="navbar">
-        <a href="{% url 'landing' %}" class="brand">
+        <a href="{% url 'landing' %}" class="brand" hx-get="{% url 'landing' %}" hx-target="#main-content" hx-select="#main-content" hx-push-url="true">
             <img src="/static/images/logo.png" alt="Sj_Store Logo">
             Sj_Store
         </a>
@@ -389,16 +489,18 @@
         </form>
 
         <div class="navItems">
-            <a href="{% url 'home' %}">Store</a>
+            <a href="{% url 'home' %}" hx-get="{% url 'home' %}" hx-target="#main-content" hx-select="#main-content" hx-push-url="true">Store</a>
             {% if request.user.is_authenticated %}
             <span style="color: var(--text-muted); cursor: default;">{{ request.user.username }}</span>
             <form action="{% url 'logout' %}" method="post" style="margin:0;">
                 {% csrf_token %}
                 <button type="submit"><i class="fa-solid fa-right-from-bracket"></i></button>
             </form>
-            <a href="{% url 'view_cart' %}" class="cart-btn">
+            <a href="{% url 'view_cart' %}" class="cart-btn" hx-get="{% url 'view_cart' %}" hx-target="#main-content" hx-select="#main-content" hx-push-url="true">
                 <i class="fa-solid fa-cart-shopping" style="font-size: 18px;"></i>
-                <!-- Dynamic cart badge would go here -->
+                {% if cart_count > 0 %}
+                <span class="badge">{{ cart_count }}</span>
+                {% endif %}
             </a>
             {% else %}
             <a href="{% url 'login' %}">Sign in</a>
@@ -409,16 +511,16 @@
         </div>
     </div>
 
-    <div class="categories">
-        <a href="{% url 'category' 'Mobiles' %}">Mobile Phones</a>
-        <a href="{% url 'category' 'Laptops' %}">Laptops & PCs</a>
-        <a href="{% url 'category' 'Accessories' %}">Audio & Accessories</a>
-        <a href="{% url 'category' 'Electronics' %}">Home Electronics</a>
-        <a href="{% url 'category' 'Fashion' %}">Apparel</a>
-        <a href="{% url 'category' 'Home & Appliances' %}">Appliances</a>
+    <div class="categories" hx-target="#main-content" hx-select="#main-content" hx-push-url="true">
+        <a hx-get="{% url 'category' 'Mobiles' %}" href="{% url 'category' 'Mobiles' %}"><i class="fa-solid fa-mobile-screen-button"></i> Mobile Phones</a>
+        <a hx-get="{% url 'category' 'Laptops' %}" href="{% url 'category' 'Laptops' %}"><i class="fa-solid fa-laptop"></i> Laptops & PCs</a>
+        <a hx-get="{% url 'category' 'Accessories' %}" href="{% url 'category' 'Accessories' %}"><i class="fa-solid fa-headphones"></i> Audio & Accessories</a>
+        <a hx-get="{% url 'category' 'Electronics' %}" href="{% url 'category' 'Electronics' %}"><i class="fa-solid fa-plug"></i> Home Electronics</a>
+        <a hx-get="{% url 'category' 'Fashion' %}" href="{% url 'category' 'Fashion' %}"><i class="fa-solid fa-shirt"></i> Apparel</a>
+        <a hx-get="{% url 'category' 'Home & Appliances' %}" href="{% url 'category' 'Home & Appliances' %}"><i class="fa-solid fa-kitchen-set"></i> Appliances</a>
     </div>
 
-    <main>
+    <main id="main-content">
         {% block content %}
         {% endblock %}
     </main>
@@ -450,6 +552,19 @@
                 <h3>Legal</h3>
                 <a href="{% url 'info' 'privacy' %}">Privacy Policy</a>
                 <a href="{% url 'info' 'terms' %}">Terms of Service</a>
+            </div>
+            <div>
+                <h3>Newsletter</h3>
+                <p style="font-size: 13px; margin-bottom: 15px;">Subscribe to receive updates on new curated collections.</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="email" placeholder="Email address" style="flex-grow: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); font-size: 13px; outline: none;">
+                    <button style="background: var(--text-main); color: white; border: none; padding: 0 15px; border-radius: 8px; cursor: pointer;"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 20px; font-size: 18px;">
+                    <a href="#" style="margin:0; color: var(--text-muted);"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" style="margin:0; color: var(--text-muted);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="margin:0; color: var(--text-muted);"><i class="fa-brands fa-facebook"></i></a>
+                </div>
             </div>
         </div>
         <div
