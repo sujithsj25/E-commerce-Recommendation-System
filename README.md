@@ -1,34 +1,37 @@
 # Sj_Store Premium E-Commerce
 
-A high-end, luxury e-commerce platform built with **Django**, featuring a modern "Glassmorphism" UI and a robust dynamic backend.
+A high-end, luxury e-commerce platform built with **Django**, featuring a modern "Glassmorphism" UI and an **AI-driven Recommendation Engine**.
 
 ## 🌟 Key Features
 
+- **AI-Powered Recommendations**: 
+    - Pure ML-based **Collaborative Filtering** engine (`recommender.py`).
+    - Personalized product suggestions based on user interaction data and community behavior.
+    - Dynamic recommendation rows integrated into the Homepage and Product Detail views.
 - **Premium UI/UX**: 
     - Apple-inspired **Glassmorphism** navbar with real-time blur.
     - Sleek animations and a glowing hero section on the landing page.
     - Interactive product cards with "Like" and "Add to Cart" instant feedback.
-- **Advanced Search**: Fully functional search bar that filters the 34-product catalog by name and category in real-time.
-- **Dynamic-Manual Hybrid Catalog**: Combines hand-crafted category sections for maximum aesthetic control with a live database sync for images, prices, and inventory.
-- **Toast Notifications**: JavaScript-driven real-time feedback system for user actions.
-- **Corporate Infrastructure**: Dedicated informational pages for About Us, Careers, Support, and Legal.
+- **Advanced Search**: Fully functional search bar that filters the product catalog by name and category in real-time.
 - **Smart Cart**: Guarded removal logic (decrementing quantity one-by-one) with safety confirmation prompts.
-- **Admin Integration**: Personalized brand identity with a unique 3D monogram logo and hidden admin portals for cleaner public UI.
+- **Corporate Infrastructure**: Dedicated informational pages for About Us, Careers, Support, and Legal.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Python 3.10+
-- Django 6.0+
-- Pillow (for image handling)
+- Pip (Python Package Manager)
 
 ### Installation
-1. Clone the repository locally.
+1. Clone the repository locally:
+   ```bash
+   git clone https://github.com/your-username/Sj-Store-Ecommerce.git
+   ```
 2. Install dependencies:
    ```bash
-   pip install django pillow
+   pip install -r requirements.txt
    ```
-3. Run migrations:
+3. Run migrations and set up the database:
    ```bash
    python manage.py migrate
    ```
@@ -39,14 +42,11 @@ A high-end, luxury e-commerce platform built with **Django**, featuring a modern
 
 ## 🛠️ Project Architecture
 
+- **`store/recommender.py`**: ML core for Collaborative Filtering using Scikit-Learn and Pandas.
 - **`store/templates/`**: Premium HTML5/CSS3 templates using a unified design system.
 - **`store/views.py`**: Custom backend logic for search, categorization, and cart handling.
 - **`store/models.py`**: SQLite database models for Products, User Interactions, and Carts.
-- **`media/`**: Dynamically uploaded product images.
-- **`static/images/`**: Fixed brand assets (Logo).
-
-## 📄 Documentation & Workflows
-Detailed planning and walkthroughs can be found in the `.brain` directory artifacts.
 
 ---
-*Created by Antigravity AI for Sj_Store*
+*Developed as a premium e-commerce solution for Sj_Store*
+
