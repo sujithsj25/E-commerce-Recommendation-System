@@ -33,9 +33,11 @@
             </div>
 
             <div style="background: var(--glass-bg); backdrop-filter: blur(20px); border-radius: 20px; padding: 30px; border: 1px solid var(--border); margin-bottom: 40px;">
-                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--text-main);">Description</h3>
-                <p style="color: var(--text-muted); line-height: 1.8; font-size: 16px;">
-                    {{ product.description|default:"Experience the pinnacle of engineering and design with this premium selection. Crafted for those who demand excellence, it combines state-of-the-art technology with timeless aesthetics." }}
+                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--text-main); display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--primary);"></i> Description
+                </h3>
+                <p style="color: var(--text-muted); line-height: 1.8; font-size: 17px; margin-bottom: 0;">
+                    {{ product.description }}
                 </p>
             </div>
 
