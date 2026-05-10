@@ -243,6 +243,9 @@
             justify-content: center;
             flex-wrap: wrap;
             border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 73px;
+            z-index: 99;
         }
 
         .categories a {
@@ -460,9 +463,9 @@
             setTimeout(() => { bar.style.width = '0%'; }, 500);
         });
 
-        document.body.addEventListener('htmx:afterOnLoad', function() {
-            // Re-trigger animations if needed
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // CSRF Token synchronization for HTMX
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
         });
 
         function showToast(message, icon = 'fa-check-circle') {
@@ -474,7 +477,7 @@
     </script>
 </head>
 
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div id="loading-bar"></div>
     <div id="toast"></div>
     <div class="navbar">
@@ -492,10 +495,9 @@
             <a href="{% url 'home' %}" hx-get="{% url 'home' %}" hx-target="#main-content" hx-select="#main-content" hx-push-url="true">Store</a>
             {% if request.user.is_authenticated %}
             <span style="color: var(--text-muted); cursor: default;">{{ request.user.username }}</span>
-            <form action="{% url 'logout' %}" method="post" style="margin:0;">
-                {% csrf_token %}
-                <button type="submit"><i class="fa-solid fa-right-from-bracket"></i></button>
-            </form>
+            <button hx-post="{% url 'logout' %}" hx-target="body" hx-push-url="true" style="margin:0; background:none; border:none; color:var(--text-main); cursor:pointer;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
             <a href="{% url 'view_cart' %}" class="cart-btn" hx-get="{% url 'view_cart' %}" hx-target="#main-content" hx-select="#main-content" hx-push-url="true">
                 <i class="fa-solid fa-cart-shopping" style="font-size: 18px;"></i>
                 {% if cart_count > 0 %}

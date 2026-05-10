@@ -12,6 +12,7 @@ class CsvImportForm(forms.Form):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'brand', 'price')
+    change_list_template = "admin/product_change_list.html"
 
     def get_urls(self):
         urls = super().get_urls()
